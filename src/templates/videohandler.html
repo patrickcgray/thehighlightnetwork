@@ -1,0 +1,85 @@
+{% extends "master.html" %}
+	
+{% block head %}
+<title>Upload a Video</title>
+{% endblock %}
+
+<style>
+.progress { position:relative; width:400px; border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
+.bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
+.percent { position:absolute; display:inline-block; top:3px; left:48%; }
+</style>
+
+{% block content %}
+
+<div class="row">
+	<div class="span3">
+			<h1>Upload a Video:</h1><br>
+	        
+	        <form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+	        	<input type="file" name="file"><br> 
+	        	<input type="submit" name="submit" value="Submit" class="btn"> 
+	        </form>
+	</div>
+	
+	<div class="span9">
+	
+		<h3>Best Practices for Videos:</h3>
+			<ul>
+				<li>Videos must be under a minute</li>
+				<li>If you're going to edit the video at all give the best moment a few replays</li>
+				<li>Slow motion is always fun</li>
+				<li>Some music can be a good touch</li>
+				<li>A good short descriptive title is the best way to be most visible</li>
+			</ul>
+	
+	</div>
+</div>
+    
+<!--
+
+maybe someday...
+
+    <div class="progress progress-striped active">
+        <div class="bar"></div >
+        <div class="percent">0%</div >
+    </div>
+        
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
+
+<script>
+(function() {
+    
+var bar = $('.bar');
+var percent = $('.percent');
+var status = $('#status');
+   
+$('form').ajaxForm({
+    beforeSend: function() {
+        status.empty();
+        var percentVal = '0%';
+        bar.width(percentVal)
+        percent.html(percentVal);
+    },
+    uploadProgress: function(event, position, total, percentComplete) {
+        var percentVal = percentComplete + '%';
+        bar.width(percentVal)
+        percent.html(percentVal);
+    },
+    success: function() {
+        var percentVal = '100%';
+        bar.width(percentVal)
+        percent.html(percentVal);
+    },
+	complete: function(xhr) {
+		status.html(xhr.responseText);
+	}
+}); 
+
+})();       
+</script>
+
+ -->
+ 
+{% endblock %}

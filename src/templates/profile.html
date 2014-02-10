@@ -1,0 +1,69 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>{{profileowner.username}}</title>
+
+{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+$(function() {
+	$('a.lightbox').lightBox();
+});
+</script>
+
+<div class="row">
+	<span class="span3">
+		<h2>{{profileowner.username}}</h2>
+    	<img src="{{avatar}}" alt="user photo" style="max-height: 200px;" class="center-it"><br>
+    	<h4>Prestige: {{profileowner.prestige}}</h4>
+    	
+    	<hr>
+	    
+	    {% if owner %}
+			<h5><a href="/editprofile">Edit Profile</a></h5>
+		{% endif %}
+		{% if upload_url and owner %}
+    	<br>
+    	<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+        <h5>Upload a New Profile Picture:</h5><br>
+        <input type="file" name="file"><br> <button type="submit" class="btn">Upload</button>
+        </form>
+        {% endif %}
+    	
+    </span>
+    	
+    <span class="span4">
+    	{% if profileowner.bio %}
+    	<h4>Bio:</h4>
+    	<p>{{profileowner.bio}}</p>
+    	{% endif %}
+    	<br>
+	    {% if profileowner.quote %}
+	    <br>
+	    <h4>Favorite Quote:</h4>{{profileowner.quote}}
+	    {% endif %}
+	    <br>
+	    {% if profileowner.sports_played %}
+	    <h4>Sports Played:</h4>
+	    	<ul>{% for sport in profileowner.sports_played %} <li>{{sport}}</li> {% endfor %}</ul>
+	    {% endif %}
+	    <br>
+	    
+	    
+    </span>
+		
+	<span class="span4 offset1">
+	 	{% if videos_to_display %}
+	 		<h4>{{profileowner.username}}'s Videos:</h4>
+			{% for video in videos_to_display %}
+				<br> <h4><a href="/video/{{video.key.id()}}">{{video.title}}</a></h4>
+			{% endfor %}
+		{% else %}
+			<p class="muted">{{profileowner.username}} needs to add some videos!</p>
+		{% endif %}
+	</span>
+
+</div>
+		{% endblock %}

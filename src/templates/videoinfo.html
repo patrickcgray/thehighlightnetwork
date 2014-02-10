@@ -1,0 +1,161 @@
+{% extends "master.html" %}
+	
+{% block head %}
+<title>Add Video Info</title>
+<meta name="description" content="">	
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="span12">
+	<h2 class="center-it">Add Video Info:</h2><br>
+	</div>
+</div>
+
+{% if error %}
+	<div class="row">
+		<div class="span12">
+			<div class="alert alert-error">Error: {{error}}</div>
+		</div>		
+	</div>
+{% endif %}
+
+	<div class="row">
+ 	
+	 	<form method="POST">
+	 	 	<span class="span6">			    	
+				<div class="alert alert-info">
+					<h3>Required:</h3>
+					
+					<h4>Title:</h4>
+				    <input class="input-xlarge"  name="title" value="{{title}}" type="text"><br><br> 
+					
+					<select id="sportcategory" name="sportcategory">
+										<option value="choose">choose a sport</option>
+										<option value="basketball">basketball</option>
+										<option value="football">football</option>
+										<option value="baseball">baseball</option>
+										<option value="soccer">soccer</option>
+										<option value="tennis">tennis</option>
+								    	<option value="mma">MMA</option>
+								    	<option value="boxing">boxing</option>
+										<option value="hockey">hockey</option>
+										<option value="extreme sports">extreme sports</option>
+										<option value="lacrosse">lacrosse</option>
+										<option value="golf">golf</option>
+										<option value="motorsports">motorsports</option>
+					</select><br>
+					
+					<select id="subcategory" name="subcategory">
+					</select><br>
+					
+					<select name="sportlevel">
+										<option value="choose">choose a sport level</option>
+										<option value="youth">youth</option>
+										<option value="high school">high school</option>
+										<option value="college">college</option>
+										<option value="intramural">pickup/intramural sports</option>
+										<option value="semi-pro">semi-pro</option>
+								    	<option value="professional">professional</option>
+					</select><br><br>
+					
+				</div>
+			    
+			</span>
+			    
+			<span class="span6">
+					
+				<div class="alert alert-success">
+					<h3>Optional (but helpful!):</h3>
+					
+					<h4>Description:</h4>
+					<textarea rows="3"  name="description">{{description}}</textarea><br><br>
+					
+					<h4>Location:</h4>
+				      {% if GPS %}
+				      Current GPS location is: {{GPS}}.  Leave it blank if you don't want to change it.<br>
+				      {% else %}
+				      (just enter the address or closest city/town and state)<br>
+				      {% endif %}
+				        <input class="input-xlarge"  name="geo_center" value="{{geo_center}}" type="text"><br><br>
+					
+					<h4>Victorious Team/Player:</h4>
+					<input class="input-xlarge"  name="winner" value="{{winner}}" type="text"><br><br>
+					
+					<h4>Beaten and Bruised Team/Player</h4>
+					<input class="input-xlarge"  name="loser" value="{{loser}}" type="text"><br><br>
+					
+					<h4>Tags: (split by commas)</h4>
+					<input class="input-xlarge"  name="tags" value="{{tags}}" type="text"><br><br>
+					
+					<h4>Shoutouts to friends or athletes: (split by commas)</h4>
+					<input class="input-xlarge"  name="shoutouts" value="{{shoutouts}}" type="text"><br><br>
+					
+					<h4>Source:</h4>
+				    <input class="input-xlarge"  name="source" value="{{source}}" type="text"><br><br>
+					
+				</div>			    
+		 	</span>
+		 	<div class="center-it"><button type="submit" class="btn btn-large center-it">Submit</button></div>
+		 </form>
+	</div>
+	
+	<script>
+	
+	(function(){
+
+        //setup an object fully of arrays
+        //alternativly it could be something like
+        //{"yes":[{value:sweet, text:Sweet}.....]}
+        //so you could set the label of the option tag something different than the name
+        var bOptions = {"choose":["choose a subcategory",], 
+        		        "basketball":["choose a subcategory", "ankle breakers","ferocious finishes", "lob city", "passes", "block party", "bloopers"],
+        		        "football":["choose a subcategory", "hard hits","jukes, sticks, and spins", "speed demons", "incredible catches", "bloopers"],
+        		        "baseball":["choose a subcategory", "amazing catches","home runs", "steals", "strikeouts", "crazy plays", "bloopers"],
+        		        "soccer":["choose a subcategory", "broken ankles","great saves", "gooooooooaaals", "freestyle", "bloopers"],
+        		        "tennis":[ "choose a subcategory","winners","smashes", "amazing rallies", "wild saves", "bloopers"],
+        		        "mma":["choose a subcategory", "tap outs", "beatings", "knockouts", "bloopers"],
+        		        "boxing":["choose a subcategory", "beat downs", "quick moves", "knockouts", "bloopers"],
+        		        "hockey":["choose a subcategory", "brutal hits","great shots", "goalie saves the day", "fights", "hat tricks", "bloopers"],
+        		        "extreme sports":["choose a subcategory", "big air", "wild tricks", "daredevil", "bloopers"],
+        		        "lacrosse":["choose a subcategory", "big hits", "goals", "goalie saves", "trick shots", "bloopers"],
+        		        "golf":["choose a subcategory", "clutch shots", "great putts", "hole in one", "trick shots", "bloopers"],
+        		        "motorsports":["choose a subcategory", "blow bys", "close finish", "crashes", "speed demons", "bloopers"],        		        
+        		        
+        };
+
+        var A = document.getElementById('sportcategory');
+        var B = document.getElementById('subcategory');
+
+        //on change is a good event for this because you are guarenteed the value is different
+        A.onchange = function(){
+            //clear out B
+            B.length = 0;
+            //get the selected value from A
+            var _val = this.options[this.selectedIndex].value;
+            //loop through bOption at the selected value
+            for ( var i in bOptions[_val]){
+                //create option tag
+                var op = document.createElement('option');
+                //set its value
+                op.value = bOptions[_val][i];
+                //set the display label
+                op.text = bOptions[_val][i];
+                //append it to B
+                B.appendChild(op);
+            }
+        };
+        //fire this to update B on load
+        A.onchange();
+
+    })();
+            
+            
+        </script>
+
+
+
+
+{% endblock %}

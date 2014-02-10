@@ -1,0 +1,44 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Advanced Search</title>
+{% endblock %}
+<style>
+.twice-size {
+	font-size: 2em;
+}
+</style>
+{% block content %}
+	<div class="row">
+		<div class="span12">
+			<h3>Search:</h3>
+		</div>
+		
+	</div>
+	
+	<div class="row">
+		<div class="span4">
+			<h5>Search by a tag:</h5>
+			<form class="form-search" action="/advancedsearch" method="POST">
+		  	<input type="text" name="search_tag" placeholder="#tag" class="input-medium search-query"><i class="icon-search"></i>
+		  	<button type="submit" class="btn">Submit</button>
+		  	</form>
+		</div>
+		<div class="span4">		
+			<h5>Search by user:</h5>
+			<form class="form-search" action="/advancedsearch" method="POST">
+		  	<input type="text" name="search_user" placeholder="@user" class="input-medium search-query"><i class="icon-search"></i>
+		  	<button type="submit" class="btn">Submit</button>
+		  	</form>
+		</div>
+		<div class="span4">
+			<h5>Search by shoutout:</h5>
+			<form class="form-search" action="/advancedsearch" method="POST">
+		  	<input type="text" name="search_shoutout" placeholder="@shoutout" class="input-medium search-query"><i class="icon-search"></i>
+		  	<button type="submit" class="btn">Submit</button>
+		  	</form>
+		</div>
+	</div>
+	
+			        
+{% endblock %}

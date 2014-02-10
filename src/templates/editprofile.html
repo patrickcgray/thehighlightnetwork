@@ -1,0 +1,111 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Complete Profile</title>
+{% endblock %}
+
+{% block content %}
+
+<form method="post">
+		<div class="row">
+		<div class="span8"> 
+		    <h4>Complete your profile:</h4>
+		    {% if error %}
+		      <div class="alert alert-error">Error: {{error}}</div>
+		    {% endif %}
+		    
+		</div>
+		</div>
+		
+		<div class="row">
+		
+		<div class="span6">
+		
+		<div class="alert alert-info">
+		<h3>Required:</h3>
+		    
+		    	{% if has_username %}
+		    	<h5>Username (you can't change this): {{username}}</h5>
+		    	{% else %}
+		    	
+		    	<label>
+		      <h5>Username (you can't change this value after creating an account):</h5>
+		        <input type="text" placeholder="Username" style="margin-right:30px;" name="username"; value="{{username}}">
+		      </label>
+		      
+		      	{% endif %}
+		      	
+		      	<label>
+		      <h5>Email (will not be shared with anyone):</h5>
+		        <input type="text" placeholder="jondoe@email.com" style="margin-right:30px;" name="email"; value="{{email}}">
+		      </label>
+		 </div>
+		 </div>
+		 
+		 <div class="span6">
+		 <div class="alert alert-success">
+			<h3>Optional:</h3>
+		      <label>
+		      <h5>If you put your real name this will work a lot better:</h5>
+		        <input type="text" placeholder="Full Name" style="margin-right:30px;" name="name"; value="{{name}}">
+		      </label>	      
+		
+		      <label>
+		      <h5>Why are you interesting?</h5>
+		        <textarea style="height: 100px; width: 400px;" name="bio">{{bio}}</textarea>
+		      </label>
+		      
+		      <label>
+		      <h5>Favorite Quote?</h5>
+		        <textarea style="height: 60px; width: 400px;" name="quote">{{quote}}</textarea>
+		      </label>
+		      
+		      <h5>Enter your location:</h5>
+		      {% if GPS %}
+		      Current GPS location is: {{GPS}}.  Leave it blank if you don't want to change it.<br>
+		      {% else %}
+		      (if you want to see location specific highlights)<br>
+		      {% endif %}
+		        <textarea style="height: 30px; width: 300px;" name="geo_center">{{geo_center}}</textarea>
+		      
+		      <label>
+		      <h5>High School:</h5>
+		        <input type="text" placeholder="" style="margin-right:30px;" name="high_school"; value="{{high_school}}">
+		      </label>
+		      
+		      <label>
+		      <h5>University/College:</h5>
+		        <input type="text" placeholder="" style="margin-right:30px;" name="university"; value="{{university}}">
+		      </label>
+		      
+		      <h5>Sports you play:</h5>
+		      	<p>Current sports on your profile are:  <strong>{% for sport in user['sports_played'] %} {{sport}} {% endfor %}</strong></p>
+		      	<input type="checkbox" name="sports_played" value="basketball"> basketball<br>
+		      	<input type="checkbox" name="sports_played" value="football"> football<br>
+		      	<input type="checkbox" name="sports_played" value="baseball"> baseball<br>
+		      	<input type="checkbox" name="sports_played" value="soccer"> soccer<br>
+		      	<input type="checkbox" name="sports_played" value="tennis"> tennis<br>
+		      	<input type="checkbox" name="sports_played" value="mma"> MMA<br>
+		      	<input type="checkbox" name="sports_played" value="boxing"> boxing<br>
+			  	<input type="checkbox" name="sports_played" value="hockey"> hockey<br>
+			  	<input type="checkbox" name="sports_played" value="extreme sports"> extreme sports<br>
+			  	<input type="checkbox" name="sports_played" value="lacrosse"> lacrosse<br>
+			  	<input type="checkbox" name="sports_played" value="golf"> golf<br>
+			  	<input type="checkbox" name="sports_played" value="motorsports"> motorsports<br>
+			  	
+			  	<br> 
+		
+		   </div>
+
+		   </div>
+		   
+		   <div class="row">
+				<div class="span12">
+					<div class="center-it">
+			   			<input class="btn btn-large" type="submit">
+			   		</div>
+		   		</div>
+		   </div>
+</form>
+
+{% endblock %}

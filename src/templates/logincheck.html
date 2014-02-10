@@ -1,0 +1,33 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Login</title>
+
+{% endblock %}
+
+{% block content %}
+
+	{% if not logged_in %}
+		<div class="row">
+		
+			<div class="span10 offset1">
+				<div class="center-it">
+					{% if error %}
+						<div class="alert alert-error">
+							<h4 >{{error}}</h4>
+						</div>
+					{% endif %}
+					<h3>Enter the password you were given to create an account:</h3>
+					<form method="post">
+						<input type="text" placeholder="password" style="margin-right:30px;" name="password"; value="{{password}}">
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<br><br><br>
+	{% endif %}
+	
+		
+	
+{% endblock %}

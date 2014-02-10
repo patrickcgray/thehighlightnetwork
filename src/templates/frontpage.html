@@ -1,0 +1,247 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+	<title>The Highlight Network</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to The Highlight Network. Your source for the best in sports.">
+    <meta name="author" content="Patrick Gray">
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    
+    <script language="Javascript">
+	function xmlhttpPost(strURL, voteoption, video_id) {
+	    var xmlHttpReq = false;
+	    var self = this;
+	    // Mozilla/Safari/Chrome
+	    if (window.XMLHttpRequest) {
+	        self.xmlHttpReq = new XMLHttpRequest();
+	    }
+	    // IE
+	    else if (window.ActiveXObject) {
+	        self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	    
+	    self.xmlHttpReq.open('POST', strURL, true);
+	    self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	    self.xmlHttpReq.onreadystatechange = function() {
+	        if (self.xmlHttpReq.readyState == 4) {
+	            updatepage(self.xmlHttpReq.responseText, video_id);
+	        }
+	    }
+	    self.xmlHttpReq.send(getquerystring(voteoption));
+	}
+	
+	function getquerystring(voteoption) {
+	    qstr = 'vote=' + escape(voteoption);  // NOTE: no '?' before querystring
+	    return qstr;
+	}
+	
+	function updatepage(str, video_id){
+	    document.getElementById("vote_count_" + video_id).innerHTML=str;
+	}
+	
+	function slideToggleIt(div_id){
+     	   $(div_id).slideToggle();
+	}
+	
+	</script>	
+   
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="span12">
+			<img src="http://i.imgur.com/YU0MJTc.gif">
+			<br>
+		</div>
+	</div>
+
+  	<div class="row">
+  	
+  		<div class="span12 nice-border menu">
+			{% if filters or tag %}
+				{% if filters %}
+	   			<h3 class="center-it">Your current filters are:<br>
+	   			{% for filter in filters %}
+	   				-{{filter}}<br>
+	   			{% endfor %}
+	   			</h3>
+	   			<br>
+	   			{% endif %}
+			 
+			 	{% if tag %}
+	   			<h3 class="center-it">Your search tag is: {{tag}}</h3>
+	   			{% endif %}
+			
+			{% elif no_user %}
+	   			
+	   				<h3 class="center-it">It doesn't look like we have a user: {{username}}</h3>
+	   						
+			{% else %}
+				{% if not newest and not top %}
+					<div class="center-it">
+						<h3 style="display:inline"> Trending Videos </h3><h5 style="display:inline;"> <a href="/newest" style="color:white;">Newest</a> </h5><h5 style="display:inline;"> <a href="/top" style="color:white;">Top </a></h5>
+					</div>
+				{% elif newest %}
+					<div class="center-it">
+						<h5 style="display:inline;"> <a href="/" style="color:white;">Trending</a> </h5><h3 style="display:inline"> Newest Videos </h3><h5 style="display:inline;"> <a href="/top" style="color:white;">Top </a></h5>
+					</div>
+				{% elif top %}
+					<div class="center-it">
+						<h5 style="display:inline;"> <a href="/" style="color:white;">Trending</a> </h5><h5 style="display:inline;"> <a href="/newest" style="color:white;">Newest</a> </h5><h3 style="display:inline"> Top Videos </h3>
+					</div>
+				{% endif %}
+			{% endif %}
+							   		
+		   	<div class="center-it">
+		   		<form action="/" method="GET" style="margin:0px">
+							
+						<select id="sportcategory" name="sportcategory" style="width:200px">
+											<option value="choose">choose a sport</option>
+											<option value="basketball">basketball</option>
+											<option value="football">football</option>
+											<option value="baseball">baseball</option>
+											<option value="soccer">soccer</option>
+											<option value="tennis">tennis</option>
+									    	<option value="mma">MMA</option>
+									    	<option value="boxing">boxing</option>
+									    	<option value="hockey">hockey</option>
+											<option value="extreme sports">extreme sports</option>
+											<option value="lacrosse">lacrosse</option>
+											<option value="golf">golf</option>
+											<option value="motorsports">motorsports</option>
+	
+						</select>
+						
+						<select id="subcategory" name="subcategory" style="width:200px">
+						</select>
+						
+						<select name="sportlevel">
+										<option value="choose">choose a sport level</option>
+										<option value="youth">youth</option>
+										<option value="high school">high school</option>
+										<option value="college">college</option>
+										<option value="intramural">pickup/intramural sports</option>
+										<option value="semi-pro">semi-pro</option>
+								    	<option value="professional">professional</option>
+						</select>
+					    
+						
+			 			<button type="submit" class="btn" style="margin-top:-10px;">Submit</button>
+				 			
+				</form>
+			</div>
+					   		
+   		
+   		</div>	
+   		
+   	</div>
+   		
+   		<div class="row">		
+			
+			
+				{% if videos %}
+					{% for video_column in videos | slice(3) %}
+					
+					<div class="span4">
+						{% for video in video_column %}
+						<div class="nice-border video-display">
+						{{video.video_front() | safe}}
+						
+						{% if user %}
+						<form name="vote">
+						  <input value="Cheer" type="button" class="btn" onclick='JavaScript:xmlhttpPost("/video/{{video.key.id()|json_encode|safe}}", "upvote", "{{video.key.id()}}")'><br>
+						  Score is: <span id="vote_count_{{video.key.id()}}">{{video.upvotes - video.downvotes}}</span><br>
+						  <input value="Boo" type="button" class="btn btn-inverse" onclick='JavaScript:xmlhttpPost("/video/{{video.key.id()|json_encode|safe}}", "downvote", "{{video.key.id()}}")'><br>
+						</form>
+						{% endif %}											
+						 
+						 <!-- 
+						 <br>
+						 <button class="btn btn-small" 
+						 onclick='Javascript:slideToggleIt("#slideTogglebox_{{video.key.id()|json_encode|safe}}")'>See More</button>
+						 <br>
+						<div id="slideTogglebox_{{video.key.id()|json_encode|safe}}" style="display: none;">
+							<h4>{% if video.winner %}  Victor: {{video.winner}} {% endif %}{% if video.loser and video.winner %} - {% endif %}{% if video.loser %} The Defeated: {{video.loser}} {% endif %}</h4>
+						 	{% if video.description %}
+						      <h4>Description:</h4> <p>{{video.description}}</p>
+						    {% endif %}						
+						</div>
+						-->
+						
+						</div>
+					
+						{% endfor %}
+				
+					</div>
+					
+					{% endfor %}
+				
+				{% else %}
+				<div class="span4 offset4">
+					<h2>We couldn't find anything :( try again!</h2>
+				</div>
+				{% endif %}
+				
+		
+	</div>	
+		
+        
+        <script>	     	 
+		
+		
+            (function(){
+
+        //setup an object fully of arrays
+        //alternativly it could be something like
+        //{"yes":[{value:sweet, text:Sweet}.....]}
+        //so you could set the label of the option tag something different than the name
+        var bOptions = {"choose":["choose a subcategory",], 
+        		        "basketball":["choose a subcategory", "ankle breakers","ferocious finishes", "lob city", "passes", "block party", "bloopers"],
+        		        "football":["choose a subcategory", "hard hits","jukes, sticks, and spins", "speed demons", "incredible catches", "bloopers"],
+        		        "baseball":["choose a subcategory", "amazing catches","home runs", "steals", "strikeouts", "crazy plays", "bloopers"],
+        		        "soccer":["choose a subcategory", "broken ankles","great saves", "gooooooooaaals", "freestyle", "bloopers"],
+        		        "tennis":[ "choose a subcategory","winners","smashes", "amazing rallies", "wild saves", "bloopers"],
+        		        "mma":["choose a subcategory", "tap outs", "beatings", "knockouts", "bloopers"],
+        		        "boxing":["choose a subcategory", "beat downs", "quick moves", "knockouts", "bloopers"],
+        		        "hockey":["choose a subcategory", "brutal hits","great shots", "goalie saves the day", "fights", "hat tricks", "bloopers"],
+        		        "extreme sports":["choose a subcategory", "big air", "wild tricks", "daredevil", "bloopers"],
+        		        "lacrosse":["choose a subcategory", "big hits", "goals", "goalie saves", "trick shots", "bloopers"],
+        		        "golf":["choose a subcategory", "clutch shots", "great putts", "hole in one", "trick shots", "bloopers"],
+        		        "motorsports":["choose a subcategory", "blow bys", "close finish", "crashes", "speed demons", "bloopers"],        		        
+        		        
+        };
+
+        var A = document.getElementById('sportcategory');
+        var B = document.getElementById('subcategory');
+
+        //on change is a good event for this because you are guarenteed the value is different
+        A.onchange = function(){
+            //clear out B
+            B.length = 0;
+            //get the selected value from A
+            var _val = this.options[this.selectedIndex].value;
+            //loop through bOption at the selected value
+            for ( var i in bOptions[_val]){
+                //create option tag
+                var op = document.createElement('option');
+                //set its value
+                op.value = bOptions[_val][i];
+                //set the display label
+                op.text = bOptions[_val][i];
+                //append it to B
+                B.appendChild(op);
+            }
+        };
+        //fire this to update B on load
+        A.onchange();
+
+    })();
+            
+            
+        </script>
+	
+{% endblock %}

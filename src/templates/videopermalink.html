@@ -1,0 +1,140 @@
+{% extends "master.html" %}
+	
+{% block head %}
+<title>{{video.title}}</title>
+<meta name="description" content="{{video.description}}">
+	
+	
+<script language="Javascript">
+function xmlhttpPost(strURL, voteoption) {
+    var xmlHttpReq = false;
+    var self = this;
+    // Mozilla/Safari/Chrome
+    if (window.XMLHttpRequest) {
+        self.xmlHttpReq = new XMLHttpRequest();
+    }
+    // IE
+    else if (window.ActiveXObject) {
+        self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    self.xmlHttpReq.open('POST', strURL, true);
+    self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    self.xmlHttpReq.onreadystatechange = function() {
+        if (self.xmlHttpReq.readyState == 4) {
+            updatepage(self.xmlHttpReq.responseText);
+        }
+    }
+    self.xmlHttpReq.send(getquerystring(voteoption));
+}
+
+function getquerystring(voteoption) {
+    qstr = 'vote=' + escape(voteoption);  // NOTE: no '?' before querystring
+    return qstr;
+}
+
+function updatepage(str){
+    document.getElementById("vote_count").innerHTML=str;
+}
+
+</script>	
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	
+	<div class="span2">
+		<br><br>
+		{% if user %}
+		<form name="vote">
+		  <input value="Cheer" type="button" class="btn" onclick='JavaScript:xmlhttpPost("/video/{{video.key.id()|json_encode|safe}}", "upvote")'>
+		  <input value="Boo" type="button" class="btn btn-inverse" onclick='JavaScript:xmlhttpPost("/video/{{video.key.id()|json_encode|safe}}", "downvote")'>
+		</form>
+		{% endif %}
+		<h4>Video score is: <span id="vote_count">{{video.upvotes - video.downvotes}}</span></h4>
+		
+		<br>
+		
+		<a href="#" 
+		  onclick="
+		    window.open(
+		      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+		      'facebook-share-dialog', 
+		      'width=626,height=436'); 
+		    return false;">
+		  <img src="http://i.imgur.com/1YIMDp2.png">
+		</a>
+		
+		<br><br>
+		
+		<a href="https://twitter.com/share" class="twitter-share-button" data-via="highlightnet">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		<br>
+	
+	</div>
+	
+	<div class="span8">
+	  	
+		{{video.video_main() | safe}}
+		
+	</div>
+	
+	<div class="span2">
+		
+		{% if related_videos %}
+		<h4 class="center-it">Related Videos:</h4>
+		  	{% for related_video in related_videos %}
+				<h5 class="center-it"><a href="/video/{{related_video.key.id()}}">{{related_video.title}}</a></h5>
+				<br><br>
+		  	{% endfor %}
+	    {% endif %}
+		
+		
+	
+	</div>
+	
+</div>
+
+<div class="row">
+	
+	<div class="span4 offset2">
+	  
+	    {% if comments %}
+		  	{% for comment in comments %}
+				{{comment.render() | safe}}
+		  	{% endfor %}
+	    {% else %}
+	    	<h5>There doesn't seem to be any comments...</h5>
+	    {% endif %}
+	    
+	    {% if user %}
+	    
+		    <form method="post">
+		      	<label>
+		        	<textarea style="height: 50px; width: 300px;" name="content" value="Add a comment...">{{content}}</textarea>
+		      	</label>
+				<button type="submit" class="btn">Comment</button>
+			</form>
+	  {% endif %}
+	  
+	</div>
+	
+	<div class="span4">
+	
+		{% if owner %}	
+			<form action="/deletevideo" method="post">
+				<input type="hidden" name="video_id" value="{{video.key.id()}}">
+				<input type="submit" value="Delete!" class="btn btn-danger pull-right">
+			</form>
+			
+		{% endif %}
+	
+	</div>
+	
+</div>
+
+
+{% endblock %}
