@@ -143,9 +143,15 @@ class AnalyticsHandler(BlogHandler):
         else:
             self.redirect('/noaccess')
         
+class BlogRouterNaked(BlogHandler):
+    def get(self):
+        self.redirect('http://blog.thehighlightnetwork.com/')
+
+        
 class BlogRouter(BlogHandler):
     def get(self, rest):
         url = self.request.url        
+
         end_of_url = url.split('www.thehighlightnetwork.com/blog/')[1]
         self.redirect('http://blog.thehighlightnetwork.com/' + end_of_url)
 

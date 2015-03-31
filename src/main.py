@@ -48,8 +48,8 @@ def handle_500(request, response, exception):
 
 #this is the information for all the handlers and their regexes and everything
 app = webapp2.WSGIApplication([('/', otherhandlers.FrontPage),
+                               ('/blog', otherhandlers.BlogRouterNaked),
                                ('/blog/(.*)', otherhandlers.BlogRouter),
-                               ('/blog', otherhandlers.BlogRouter),
                                ('/analytics', otherhandlers.AnalyticsHandler),
                                ('/script.js', otherhandlers.ScriptThang),
                                ('/robots.txt', otherhandlers.Robots),
